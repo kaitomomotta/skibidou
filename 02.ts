@@ -13,10 +13,7 @@ log(input, 'input')
 const reports: string[] = input.split('\n')
 log(reports, 'reports')
 
-let result = 0
-reports.forEach((report) => {
-    const level = report.split(' ')
-    log(level)
+function isLevelSafe(level: string[]): boolean {
     const element = parseInt(level[0])
     const element2 = parseInt(level[1])
     const goingUp = element < element2 ? true : false
@@ -27,11 +24,40 @@ reports.forEach((report) => {
         if ((diff === 0 || diff > 3) || (goingUp && element > element2) || (!goingUp && element < element2)) {
             // report is Unsafe
             log('unsafe')
+            return false
+        }
+    }
+    return true
+}
+
+// eewwwwwwww
+function buildNewLevels(level: string[]): string[][] {
+    const levels: string[][] = []
+    for (let index = 0; index < level.length; index++) {
+        const levelCopy = structuredClone(level)
+        levelCopy.splice(index, 1)
+        levels.push(levelCopy)
+    }
+    return levels
+}
+
+let result = 0
+reports.forEach((report) => {
+    const level = report.split(' ')
+    log(level)
+    const isSafe = isLevelSafe(level)
+    if (isSafe) {
+        result ++
+    }
+    if (!isSafe) {
+        const levelsNew = buildNewLevels(level)
+        for (const levelNew of levelsNew) {
+            if (isLevelSafe(levelNew)) {
             result++
             break
+            }
         }
     }
 })
 
 log(result)
-log(reports.length - result)
