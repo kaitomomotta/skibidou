@@ -12,6 +12,7 @@ log(input, 'input')
 
 const lines: string[] = input.split('\n')
 const characters: string[][] = lines.map((line) => line.split(''))
+console.log(characters, 'characters')
 
 function countXMAShorizontal(characters: string[][]): number {
     let result = 0
@@ -103,24 +104,53 @@ function countXMASdiagonal2(characters: string[][]): number {
 // .A.
 // M.M
 function countCrossMAS(characters: string[][]): number {
-    let result = 0
-    for (let i = 0; i < characters.length - 2; i++) {
-        for (let j = 0; j < characters[i].length - 2; j++) {
-            if (characters[i][j] === 'M' && characters[i + 2][j] === 'M' && characters[i][j + 2] === 'S' && characters[i + 2][j + 2] === 'S' && characters[i + 1][j + 1] === 'A') {
-                result++
-            }
-            if (characters[i][j] === 'S' && characters[i + 2][j] === 'S' && characters[i][j + 2] === 'M' && characters[i + 2][j + 2] === 'M' && characters[i + 1][j + 1] === 'A') {
-                result++
-            }
-            if (characters[i][j] === 'S' && characters[i + 2][j] === 'M' && characters[i][j + 2] === 'M' && characters[i + 2][j + 2] === 'S' && characters[i + 1][j + 1] === 'A') {
-                result++
-            }
-            if (characters[i][j] === 'M' && characters[i + 2][j] === 'S' && characters[i][j + 2] === 'S' && characters[i + 2][j + 2] === 'M' && characters[i + 1][j + 1] === 'A') {
-                result++
+    const rows = characters.length;
+    const cols = characters[0].length;
+    let result = 0;
+
+    // Iterate over all possible center positions (excluding edges for diagonals)
+    for (let i = 1; i < rows - 1; i++) {
+        for (let j = 1; j < cols - 1; j++) {
+            // Center must be 'A'
+            if (characters[i][j] === 'A') {
+                // Check all valid X-shaped cross patterns
+                if (
+                    characters[i - 1][j - 1] === 'M' && // Top-left
+                    characters[i + 1][j + 1] === 'S' && // Bottom-right
+                    characters[i - 1][j + 1] === 'M' && // Top-right
+                    characters[i + 1][j - 1] === 'S'    // Bottom-left
+                ) {
+                    result++;
+                }
+                if (
+                    characters[i - 1][j - 1] === 'M' && // Top-left
+                    characters[i + 1][j + 1] === 'S' && // Bottom-right
+                    characters[i - 1][j + 1] === 'S' && // Top-right
+                    characters[i + 1][j - 1] === 'M'    // Bottom-left
+                ) {
+                    result++;
+                }
+                if (
+                    characters[i - 1][j - 1] === 'S' && // Top-left
+                    characters[i + 1][j + 1] === 'M' && // Bottom-right
+                    characters[i - 1][j + 1] === 'M' && // Top-right
+                    characters[i + 1][j - 1] === 'S'    // Bottom-left
+                ) {
+                    result++;
+                }
+                if (
+                    characters[i - 1][j - 1] === 'S' && // Top-left
+                    characters[i + 1][j + 1] === 'M' && // Bottom-right
+                    characters[i - 1][j + 1] === 'S' && // Top-right
+                    characters[i + 1][j - 1] === 'M'    // Bottom-left
+                ) {
+                    result++;
+                }
             }
         }
     }
-    return result
+
+    return result;
 }
 
 const result = countCrossMAS(characters)
