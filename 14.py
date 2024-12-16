@@ -35,6 +35,23 @@ def pretty_print(robots):
     for row in grid:
         print(''.join(row))
 
+def is_3x3_filled(grid):
+    for i in range(max_y - 2):
+        for j in range(max_x - 2):
+            if all(grid[i + di][j + dj] != '.' for di in range(3) for dj in range(3)):
+                return True
+    return False
+
+def build_grid(robots_positions):
+    grid = [['.' for _ in range(max_x)] for _ in range(max_y)]
+    for robot in robots_positions:
+        x, y = robot[0], robot[1]
+        if grid[y][x] == '.':
+            grid[y][x] = '1'
+        else:
+            grid[y][x] = str(int(grid[y][x]) + 1)
+    return grid
+
 def count_quadrants(robots):
     a = 0 # top left
     b = 0 # top right
@@ -62,3 +79,15 @@ def count_quadrants(robots):
 # q = count_quadrants(robots_positions)
 # res = q[0] * q[1] * q[2] * q[3]
 # print(res)
+
+# part 2
+found = False
+second = 0
+while found == False:
+    print(second)
+    robots_positions = [move_robot(robot, second) for robot in robots_int]
+    grid = build_grid(robots_positions)
+    found = is_3x3_filled(grid)
+    second += 1
+
+print(second - 1)
